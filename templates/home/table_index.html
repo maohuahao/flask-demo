@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/paginate_table.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/table_index.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/search_table.css') }}"/>
+{% endblock %}
+
+
+{% block header %}
+
+{% endblock %}
+
+
+{% block main %}
+
+    <h1><span class="blue">&lt;</span>EnterpriseRank<span class="blue">&gt;</span> <span class="yellow">Info</span></h1>
+    <br>
+    {#    <h2>Created with love by <a href="https://github.com/pablorgarcia" target="_blank">Pablo García</a></h2>#}
+
+    <form class="searchform cf" action="{{ url_for('enterprise_opt.index') }}" method="GET">
+        <input type="text" placeholder="输入要查询公司的名字" name="search" value="{{ locals.search }}">
+        <button type="submit">Search</button>
+    </form>
+    <table class="container-table">
+        <thead>
+        <tr>
+            <th><h1>id</h1></th>
+            <th><h1>注册号</h1></th>
+            <th><h1>企业名称</h1></th>
+            <th><h1>社会信用代码</h1></th>
+            <th><h1>注册资金</h1></th>
+            <th><h1>企业(P)/个体户(E)</h1></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for enterprise in locals.enterpriseRanks %}
+            <tr>
+                <td><a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.id }}</a></td>
+                <td><a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.reg_no }}</a></td>
+                <td><a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.format_name }}</a></td>
+                <td><a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.credit_no }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.regist_capi_new|float }}</a>
+                </td>
+                <td><a href="{{ url_for('enterprise_opt.detail', id=enterprise.id) }}">{{ enterprise.category }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="container">
+        <div>
+            <div id="paginate"></div>
+        </div>
+        <div>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+    <input id="company-num" type="hidden" value="{{ locals.paginate.total }}"/>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/home/paginate.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/search.js') }}"></script>
+{% endblock %}

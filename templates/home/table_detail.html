@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/table_detial.css') }}">
+{% endblock %}
+{% block main %}
+    <div id="detail-box">
+        <div class="detial-item">
+            <p>
+                企业名称：{{ locals.enterprise.format_name }}
+            </p>
+            <p>
+                企业类型：{{ locals.enterprise.econ_kind }}
+            </p>
+            <p>
+                经营范围：{{ locals.enterprise.scope }}
+            </p>
+            <p>
+                登记机关：{{ locals.enterprise.belong_org }}
+            </p>
+            <p>
+                法定代表人：{{ locals.enterprise.oper_name }}
+            </p>
+        </div>
+        <div id="detial-score"></div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {#<script src="{{ url_for('static', filename='js/home/echarts_score.js') }}"></script>#}
+    <script>
+        var chartDom = document.getElementById('detial-score');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+            title: {
+                text: '企业评分指标分布',
+                subtext: '综合得分：{{ locals.enterprise.score * 100 }}',
+                left: 'center',
+                textStyle: {
+                    color: '#A7A1AE'
+                }
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                textStyle: {
+                    color: '#A7A1AE'
+                }
+            },
+            series: [
+                {
+                    name: '数量',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        {value: {{ locals.enterprise.shiyebx_num }}, name: 'shiyebx_num'},
+                        {value: {{ locals.enterprise.yiliaobx_num }}, name: 'yiliaobx_num'},
+                        {value: {{ locals.enterprise.gongshangbx_num }}, name: 'gongshangbx_num'},
+                        {value: {{ locals.enterprise.dw_shiyebx_js }}, name: 'dw_shiyebx_js'},
+                    ],
+                    label: {
+                        color: '#A7A1AE',
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+    </script>
+
+{% endblock %}

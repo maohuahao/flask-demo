@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}"/>
+    {% block style %} {% endblock %}
+</head>
+<body>
+<div id="box">
+    <nav>
+        <ul>
+            <li class="item current-select">
+                <a href="{{ url_for('enterprise_opt.index') }}">Home</a>
+            </li>
+            <li class="item">
+                <a href="#">Analysis</a>
+            </li>
+            <li class="item">
+                <a href="{{ url_for('enterprise_opt.ranking') }}">Ranking</a>
+            </li>
+            <li class="item">
+                <a href="#">About</a>
+            </li>
+            <li class="item">
+                <a href="#">Services</a>
+            </li>
+            <li class="item">
+                <a href="#">Contact</a>
+            </li>
+            <li class="item">
+                <a href="{{ url_for('login_opt.login') }}">Login</a>
+            </li>
+        </ul>
+    </nav>
+    {% block header %}{% endblock %}
+    {% block main %}{% endblock %}
+    {% block footer %}{% endblock %}
+</div>
+<script src="{{ url_for('static', filename='js/switch_nav.js') }}"></script>
+{% block script %} {% endblock %}
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
+</head>
+<body>
+<nav>
+    <ul>
+        <li class="item">
+            <a href="{{ url_for('enterprise_opt.index') }}">Home</a>
+        </li>
+        <li class="item">
+            <a href="#">Analysis</a>
+        </li>
+        <li class="item current-select">
+            <a href="{{ url_for('enterprise_opt.ranking') }}">Ranking</a>
+        </li>
+        <li class="item">
+            <a href="#">About</a>
+        </li>
+        <li class="item">
+            <a href="#">Services</a>
+        </li>
+        <li class="item">
+            <a href="#">Contact</a>
+        </li>
+        <li class="item">
+            <a href="{{ url_for('login_opt.login') }}">Login</a>
+        </li>
+    </ul>
+</nav>
+<div id="container">
+    <div class="box">
+        <div id="serious_illegal" style="width: 800px; height: 500px" data="{{ locals.serious_illegal_json }}"></div>
+    </div>
+    <div class="box">
+        <div id="abnormal" style="width: 800px; height: 500px" data="{{ locals.abnormal_json }}"></div>
+    </div>
+    <div class="box">
+        <div id="executedpersons" style="width: 800px; height:500px" data="{{ locals.executedpersons_json }}"></div>
+    </div>
+    <div class="box">
+        <div id="executions" style="width: 800px; height:500px" data="{{ locals.executions_json }}"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/analysis/echarts_demo.js') }}"></script>
+
+</body>
+</html>
