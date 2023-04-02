@@ -2,7 +2,7 @@
 user = 'root'
 password = '123456'
 database = 'flask01'
-host = '8.130.111.128'
+host = 'ip地址'
 port = '3306'
 SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8".format(user, password, host, port,database)
 # 设置sqlalchemy自动更跟踪数据库
