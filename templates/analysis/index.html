@@ -1,54 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis/index.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
-</head>
-<body>
-<nav>
-    <ul>
-        <li class="item">
-            <a href="{{ url_for('enterprise_opt.index') }}">Home</a>
-        </li>
-        <li class="item">
-            <a href="#">Analysis</a>
-        </li>
-        <li class="item current-select">
-            <a href="{{ url_for('enterprise_opt.ranking') }}">Ranking</a>
-        </li>
-        <li class="item">
-            <a href="#">About</a>
-        </li>
-        <li class="item">
-            <a href="#">Services</a>
-        </li>
-        <li class="item">
-            <a href="#">Contact</a>
-        </li>
-        <li class="item">
-            <a href="{{ url_for('login_opt.login') }}">Login</a>
-        </li>
-    </ul>
-</nav>
-<div id="container">
-    <div class="box">
-        <div id="serious_illegal" style="width: 800px; height: 500px" data="{{ locals.serious_illegal_json }}"></div>
-    </div>
-    <div class="box">
-        <div id="abnormal" style="width: 800px; height: 500px" data="{{ locals.abnormal_json }}"></div>
-    </div>
-    <div class="box">
-        <div id="executedpersons" style="width: 800px; height:500px" data="{{ locals.executedpersons_json }}"></div>
-    </div>
-    <div class="box">
-        <div id="executions" style="width: 800px; height:500px" data="{{ locals.executions_json }}"></div>
-    </div>
-</div>
+{% extends 'base.html' %}
 
-<script src="{{ url_for('static', filename='js/analysis/echarts_demo.js') }}"></script>
+{% block style %}
+    <style>
+        #chartbox ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
 
-</body>
-</html>
+        #main {
+            margin-top: 200px;
+            width: 500px;
+            height: 500px;
+        }
+
+        .echart1 {
+            width: 500px;
+            height: 300px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div id="chartbox">
+        <ul>
+            <li>
+                <div class="echart1">
+                    <iframe
+                            width="600"
+                            height="400"
+                            seamless
+                            frameBorder="0"
+                            scrolling="no"
+                            src="http://node1:8088/superset/explore/?r=16&standalone=1&height=400"
+                    >
+                    </iframe>
+                    </iframe>
+                    <iframe
+                            width="600"
+                            height="400"
+                            seamless
+                            frameBorder="0"
+                            scrolling="no"
+                            src="http://node1:8088/superset/explore/?r=14&standalone=1&height=400"
+                    >
+                    </iframe>
+                </div>
+            </li>
+            <li>
+                <div id="main"></div>
+            </li>
+            <li>
+                <div class="echart1">
+                    <iframe
+                            width="600"
+                            height="400"
+                            color=""
+                            seamless
+                            frameBorder="0"
+                            scrolling="no"
+                            src="http://node1:8088/superset/explore/?r=6&standalone=1&height=400"
+                    >
+                    </iframe>
+                    <iframe
+                            width="600"
+                            height="400"
+                            seamless
+                            frameBorder="0"
+                            scrolling="no"
+                            src="http://node1:8088/superset/explore/?r=8&standalone=1&height=400"
+                    >
+                    </iframe>
+                </div>
+
+            </li>
+        </ul>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        let chartDom = document.getElementById('main');
+        let Banan = echarts.init(chartDom);
+        let option;
+        let data = {{ enterprises|safe }};
+
+        function convertData(data) {
+            let res = new Array();
+
+            data.forEach(function (item) {
+                let obj = {
+                    'name': item['format_name'],
+                    'value': [item['longitude'], item['latitude']]
+                };
+                res.push(obj);
+            })
+
+            console.log(res);
+            return res
+        }
+
+
+        Banan.showLoading();
+        $.get('{{ url_for('static', filename='Banan.json') }}', function (geoJson) {
+            Banan.hideLoading();
+            echarts.registerMap('Banan', geoJson);
+            Banan.setOption(
+                (option = {
+                        title: {
+                            x: 'center',
+                            y: 'top',
+                            textAlign: 'center',
+                            text: '巴南企业分布',
+                            subtext: '',
+                            textStyle: {
+                                color: '#A7A1AE'
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'item'
+                        },
+
+                        geo: {
+                            map: 'Banan',
+                            label: {
+                                emphasis: {
+                                    show: false
+                                }
+                            },
+                            itemStyle: {
+                                normal: {
+                                    areaColor: '#1F2739',
+                                    borderColor: '#fff'
+                                },
+                            },
+                        },
+
+                        series: [
+                            {
+                                name: '巴南企业密度',
+                                type: 'scatter',
+                                coordinateSystem: 'geo',
+                                data: convertData(data),
+                                symbolSize: 5,
+                                label: {
+                                    normal: {
+                                        formatter: '{b}',
+                                        position: 'right',
+                                        show: false
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        color: '#ffeb7b'
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                )
+            )
+        })
+    </script>
+{% endblock %}

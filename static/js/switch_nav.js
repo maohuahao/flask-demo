@@ -1,11 +1,7 @@
-let itemAll  = document.querySelectorAll('.item');
+let url = window.location.href;
+// http://127.0.0.1:5100/enterprise/home
+let re = new RegExp('enterprise/(.*?)/|enterprise/(.*?)');
+let className = url.match(re);
 
-itemAll.forEach((item)=>{
-    item.addEventListener('click', ()=>{
-        itemAll.forEach((item)=>{
-            item.classList.remove("current-select");
-        })
-        console.log(item);
-         item.classList.add("current-select");
-    })
-})
+let currentPage = document.getElementById(className[1]);
+currentPage.classList.add('current-select');

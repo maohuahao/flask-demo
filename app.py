@@ -31,14 +31,15 @@ migrate = Migrate(app, db)
 
 with app.test_request_context():
     # 练习
-    print(url_for('student_opt.insert'))
-    print(url_for('student_opt.queryall'))
-    print(url_for('student_opt.query'))
-    print(url_for('student_opt.update'))
+    # print(url_for('student_opt.insert'))
+    # print(url_for('student_opt.queryall'))
+    # print(url_for('student_opt.query'))
+    # print(url_for('student_opt.update'))
 
     ##
-    print(url_for('enterprise_opt.index'))
+    print(url_for('enterprise_opt.home'))
     print(url_for('enterprise_opt.detail', id=1))
+    print(url_for('enterprise_opt.analysis'))
     print(url_for('login_opt.login'))
 
 if __name__ == '__main__':

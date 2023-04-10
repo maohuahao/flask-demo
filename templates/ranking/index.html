@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ranking/index.css') }}">
+{% endblock %}
+
+
+{% block main %}
+    <div id="container">
+        <div class="box">
+            <div id="serious_illegal" data="{{ locals.serious_illegal_json }}"></div>
+            <div id="abnormal" data="{{ locals.abnormal_json }}"></div>
+        </div>
+        <div class="box">
+            <div id="executedpersons" data="{{ locals.executedpersons_json }}"></div>
+            <div id="executions" data="{{ locals.executions_json }}"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/ranking/echarts_demo.js') }}"></script>
+{% endblock %}

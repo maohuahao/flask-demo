@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ranking/index.css') }}"/>
+    <style>
+        .left-box, .right-box{
+            display:flex;
+            justify-content:space-between;
+            width: 600px;
+            height: 300px;
+            margin-bottom:10px;
+        }
+
+        #size, #age, #title-abbr{
+            width: 180px;
+            height: 240px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <div id="container">
+        <div class="box">
+            <div class="left-box" id="industrySort"></div>
+            <div class="left-box" id="educationSort"></div>
+            <div class="left-box">
+                <div id="size"></div>
+                <div id="age"></div>
+                <div id="title-abbr"></div>
+            </div>
+        </div>
+        <div class="box"></div>
+        <div class="box">
+            <div class="right-box" id="line"></div>
+            <div class="right-box" id="line2"></div>
+            <div class="right-box" id="line3"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        let industry = {{ locals.industry_list_clear|safe }};
+        let education = {{ locals.education_list_clear|safe }};
+
+        // 对数据进行统计（只取前7个）
+        function getWordCount(datas) {
+            let wordCount = []
+            let obj = {}
+            datas.forEach((item) => {
+                if (!obj.hasOwnProperty(item)) {
+                    obj[item] = 1
+                } else {
+                    obj[item] += 1;
+                }
+            })
+            Object.keys(obj).forEach(key => {
+                wordCount.push({'name': key, 'value': obj[key]});
+            })
+            wordCount.sort((a, b) => b.value - a.value);
+            return wordCount.slice(0, 7);
+        }
+
+        // 将数组中的对象分解成二维数组，方便画图
+        function getValue(dataSort) {
+            let x = [];
+            let y = [];
+            dataSort.forEach(item => {
+                x.push(item['name']);
+                y.push(item['value']);
+            })
+
+            return [x, y];
+        }
+
+        let industrySort = getWordCount(industry)
+        let educationSort = getWordCount(education);
+        let industrySortDom = document.getElementById('industrySort');
+        let educationSortDom = document.getElementById('educationSort');
+        let industryCharts = echarts.init(industrySortDom);
+        let educationCharts = echarts.init(educationSortDom);
+        let industryData = getValue(industrySort);
+        let educationData = getValue(educationSort);
+        let industryOption = getBarOption(industryData, '行业分布');
+        let educationOption = getBarOption(educationData, '学历分布', '#27d08a');
+        industryOption && industryCharts.setOption(industryOption);
+        educationOption && educationCharts.setOption(educationOption);
+    </script>
+
+
+    <script>
+        function getLegendTitle(data) {
+            let legendTitle = [];
+            data.forEach(item => {
+                legendTitle.push(item.name);
+            })
+            return legendTitle;
+        }
+
+        let sizeData = {{ locals.enterprise_dict_size|safe }};
+        let ageData = {{ locals.enterprise_dict_age|safe }};
+        let titleAbbrData = {{ locals.enterprise_dict_title|safe }};
+
+        let sizeLegendTitle = getLegendTitle(sizeData);
+        let ageLegendTitle = getLegendTitle(ageData);
+        let tilteAbbrTitle = getLegendTitle(titleAbbrData);
+
+        let sizeDom = document.getElementById('size');
+        let ageDom = document.getElementById('age');
+        let titleAbbrDom = document.getElementById('title-abbr');
+
+        let sizeEchart = echarts.init(sizeDom);
+        let ageEchart = echarts.init(ageDom);
+        let titleEchart = echarts.init(titleAbbrDom);
+
+        let sizeOption = getPieOption(sizeData, sizeLegendTitle, '企业规模分布');
+        let ageOption = getPieOption(ageData, ageLegendTitle, '年龄分布');
+        let titleOption = getPieOption(titleAbbrData, tilteAbbrTitle, '职位分布');
+
+        sizeOption && sizeEchart.setOption(sizeOption);
+        ageOption && ageEchart.setOption(ageOption);
+        titleOption && titleEchart.setOption(titleOption);
+    </script>
+
+    <script>
+        let line = document.getElementById('line');
+        let line2 = document.getElementById('line2');
+        let line3 = document.getElementById('line3');
+        let lineChart = echarts.init(line);
+        let topChart = echarts.init(line2);
+        let line3Chart = echarts.init(line3);
+        let lineOption = getLineOption();
+        let topOption = getBarOption([['浙江', '上海', '江苏', '广东', '北京', '深圳', '安徽', '四川'],[2, 3, 3, 9, 15, 18, 20, 13]], '省份top');
+        let line3Option = getPie2Option();
+
+        lineOption && lineChart.setOption(lineOption);
+        topOption && topChart.setOption(topOption);
+        line3Option && line3Chart.setOption(line3Option);
+
+    </script>
+
+
+{% endblock %}

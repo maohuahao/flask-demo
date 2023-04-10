@@ -11,7 +11,7 @@ window.onload = function () {
         } else {
 
             const xhr = new XMLHttpRequest();
-            xhr.open('post', 'http://127.0.0.1:5000/login');
+            xhr.open('post', 'http://127.0.0.1:5100/login');
             xhr.setRequestHeader("X-CSRFToken", csrfToken.value);
             xhr.setRequestHeader(
                 "Content-Type",

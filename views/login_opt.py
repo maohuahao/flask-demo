@@ -12,9 +12,10 @@ def login():
         if form.get('username') == 'zhangsan' and form.get('password') == '123456':
             response = make_response()
             response.headers['REDIRECT'] = 'REDIRECT'
-            response.headers['CONTENTPATH'] = url_for('enterprise_opt.index')
+            response.headers['CONTENTPATH'] = url_for('enterprise_opt.home')
             # 设置cookie认证
-            response.set_cookie('username', 'zhangsan', max_age = 3600)
+            # response.set_cookie('username', 'zhangsan', max_age = 3600)
+            response.set_cookie('username', 'zhangsan')
             return response
         else:
             data = {
