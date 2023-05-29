@@ -2,7 +2,7 @@ import json
 import re
 from typing import List
 
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for
 from sqlalchemy import func
 
 from models import *
